@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -37,6 +38,8 @@ public class Hivemind : MonoBehaviour {
     bool adding;
     bool canVote = true;
 
+    bool quitting = false;
+
 	// Use this for initialization
 	void Start () {
         textBox.text = "";
@@ -48,6 +51,9 @@ public class Hivemind : MonoBehaviour {
         voteWindow.localPosition = GetWindowPosition(voteWindow, voteOffX);
 
         addSpot = addition.transform.localPosition;
+
+        shownScore = totalScore = ScoreManager.Instance.GetValidatedScore();
+        scoreText.text = totalScore.ToString();
 
         LoadPost();
 	}
@@ -118,6 +124,12 @@ public class Hivemind : MonoBehaviour {
         {
             shownScore = Mathf.MoveTowards(shownScore, totalScore, 0.2f);
             scoreText.text = Mathf.RoundToInt(shownScore).ToString();
+        }
+
+        if(!quitting && Input.GetKeyUp(KeyCode.Escape))
+        {
+            quitting = true;
+            SceneManager.LoadSceneAsync("Start");
         }
     }
 
@@ -237,6 +249,8 @@ public class Hivemind : MonoBehaviour {
         addition.text = sign + amt.ToString();
 
         addition.transform.localPosition = addSpot;
+
+        ScoreManager.Instance.SubmitScore("antti", totalScore);
 
         Tweener.Instance.ScaleTo(addition.transform, Vector3.one, 0.33f, 0f, TweenEasings.BounceEaseOut);
         Invoke("MoveAddition", 0.75f);
