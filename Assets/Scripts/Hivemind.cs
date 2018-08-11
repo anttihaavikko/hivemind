@@ -36,6 +36,8 @@ public class Hivemind : MonoBehaviour {
     int totalScore = 0;
     float shownScore = 0;
 
+    float scoreChangeSpeed = 0.2f;
+
     Vector3 addSpot;
     bool adding;
     bool canVote = true;
@@ -141,7 +143,7 @@ public class Hivemind : MonoBehaviour {
 
         if(adding)
         {
-            shownScore = Mathf.MoveTowards(shownScore, totalScore, 0.2f);
+            shownScore = Mathf.MoveTowards(shownScore, totalScore, Mathf.Max(scoreChangeSpeed, 0.2f));
             scoreText.text = Mathf.RoundToInt(shownScore).ToString();
         }
 
@@ -276,6 +278,8 @@ public class Hivemind : MonoBehaviour {
         var sign = success ? "+" : "-";
         totalScore += amt * dir;
         addition.text = sign + amt.ToString();
+
+        scoreChangeSpeed = amt * Time.deltaTime;
 
         addition.transform.localPosition = addSpot;
 
