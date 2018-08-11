@@ -14,8 +14,6 @@ public class RedditConnector {
     private string postFilters = "hot";
     private string deviceId;
 
-    private List<string> seenPosts;
-
     public string errorMessage = null;
 
     public string postsJSON = null;
@@ -32,8 +30,6 @@ public class RedditConnector {
         CurrentPostComments = new List<RedditComment>();
         tokenCreationTime = DateTime.Now;
         AllLoadedPosts = new List<RedditPost>();
-
-        seenPosts = new List<string>();
 
         deviceId = Application.platform == RuntimePlatform.WebGLPlayer ? System.Guid.NewGuid().ToString() : SystemInfo.deviceUniqueIdentifier;
     }
@@ -93,7 +89,7 @@ public class RedditConnector {
         return auth;
     } 
 
-    public IEnumerator LoadPost(Action showPost)
+    public IEnumerator LoadPost(List<string> votedIds, Action showPost)
     {
         yield return GetAccessToken();
 
@@ -138,13 +134,13 @@ public class RedditConnector {
 
             foreach(var p in json.data.children) {
                 
-                if (!seenPosts.Contains(p.data.id))
+                if (!votedIds.Contains(p.data.id))
                 {
                     AllLoadedPosts.Add(p.data);
                 }
             }
 
-            //Debug.Log("Loaded " + AllLoadedPosts.Count + " posts.");
+            Debug.Log("Loaded " + AllLoadedPosts.Count + " posts.");
 
             //Debug.Log("--------");
             //Debug.Log(post.score + " : " + post.author + " : " + post.title);
@@ -152,7 +148,7 @@ public class RedditConnector {
 
             if(AllLoadedPosts.Count == 0) {
                 postFilters = "r/random";
-                yield return LoadPost(showPost);
+                yield return LoadPost(votedIds, showPost);
                 yield break;
             }
 
@@ -171,7 +167,6 @@ public class RedditConnector {
     private void PickNewPost()
     {
         CurrentPost = AllLoadedPosts[UnityEngine.Random.Range(0, AllLoadedPosts.Count)];
-        seenPosts.Add(CurrentPost.id);
         AllLoadedPosts.Remove(CurrentPost);
         //Debug.Log("Picked post from cache, " + AllLoadedPosts.Count + " left.");
 

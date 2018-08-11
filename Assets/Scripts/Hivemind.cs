@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -41,8 +42,13 @@ public class Hivemind : MonoBehaviour {
 
     bool quitting = false;
 
+    List<string> votedPosts;
+
 	// Use this for initialization
 	void Start () {
+
+        votedPosts = new List<string>();
+
         textBox.text = "";
 
         reddit = new RedditConnector();
@@ -57,6 +63,8 @@ public class Hivemind : MonoBehaviour {
         scoreText.text = totalScore.ToString();
 
         MoveAlienLoading();
+
+        LoadVotedPosts();
 
         Invoke("LoadPost", 0.25f);
 	}
@@ -171,15 +179,20 @@ public class Hivemind : MonoBehaviour {
 
     void LoadPost()
     {
-        ShowInfo("\n\n Loading...");
+        LoadPost("Loading...");
+    }
+
+    void LoadPost(string loadingMessage)
+    {
+        ShowInfo("\n\n " + loadingMessage);
         textBox.text = "";
         commentTextBox.text = "";
         image.sprite = null;
         fullImage.sprite = null;
-        //video.Stop();
+        video.Stop();
         ClearVideoTexture();
         videoImage.SetActive(false);
-        StartCoroutine(reddit.LoadPost(ShowPost));
+        StartCoroutine(reddit.LoadPost(votedPosts, ShowPost));
     }
 
     void ClearVideoTexture()
@@ -194,8 +207,12 @@ public class Hivemind : MonoBehaviour {
     {
         if(reddit.CurrentPost.num_comments < 3)
         {
-            Debug.Log("Not enough comments...");
-            LoadPost();
+            LoadPost("Digging deep...");
+            return;
+        }
+
+        if(votedPosts.Contains(reddit.CurrentPost.id))
+        {
             return;
         }
 
@@ -260,7 +277,6 @@ public class Hivemind : MonoBehaviour {
 
         PickComment();
 
-        currentComment = reddit.CurrentPostComments[0];
         commentTitle.text = currentComment.author;
         commentTextBox.text = ParseHtml(currentComment.body);
 
@@ -271,7 +287,7 @@ public class Hivemind : MonoBehaviour {
 
     private void PickComment()
     {
-        int targetDirection = Random.value < 0.35f ? 1 : -1;
+        int targetDirection = Random.value < 0.3f ? 1 : -1;
         currentComment = reddit.CurrentPostComments.Find(c => (int)Mathf.Sign(c.score) == targetDirection);
         var str = "Trying to get post with " + targetDirection + " karma...";
 
@@ -313,6 +329,22 @@ public class Hivemind : MonoBehaviour {
         Invoke("HideCommentWindow", 0.75f);
         Invoke("HidePostWindow", 1f);
         Invoke("StartPostLoading", 1.25f);
+
+        votedPosts.Add(reddit.CurrentPost.id);
+
+        if (votedPosts.Count > 500)
+            votedPosts.RemoveAt(0);
+
+        PlayerPrefs.SetString("VotedPosts", System.String.Join(",", votedPosts.ToArray()));
+    }
+
+    void LoadVotedPosts()
+    {
+        if(PlayerPrefs.HasKey("VotedPosts")) {
+            var str = PlayerPrefs.GetString("VotedPosts");
+            votedPosts.AddRange(str.Split(','));
+            Debug.Log("PlayerPrefs had " + votedPosts.Count + " voted posts...");
+        }
     }
 
     string ParseHtml(string text)
