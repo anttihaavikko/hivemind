@@ -108,6 +108,11 @@ public class Hivemind : MonoBehaviour {
             StartPostLoading();
         }
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            video.Play();
+        }
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             File.WriteAllText(Application.dataPath + "/dump_posts.json", reddit.postsJSON);
@@ -157,7 +162,7 @@ public class Hivemind : MonoBehaviour {
         commentTextBox.text = "";
         image.sprite = null;
         fullImage.sprite = null;
-        video.Stop();
+        //video.Stop();
         ClearVideoTexture();
         videoImage.SetActive(false);
         StartCoroutine(reddit.LoadPost(ShowPost));
@@ -192,6 +197,7 @@ public class Hivemind : MonoBehaviour {
         //str += post.num_comments + " comments\n";
         //str += post.score + "\n\n";
         str += post.selftext;
+        str += "\n";
 
         postTitle.text = ParseHtml(post.title);
         header.text = post.subreddit_name_prefixed + "\nu/" + post.author;
@@ -224,6 +230,12 @@ public class Hivemind : MonoBehaviour {
 
         //reddit.CurrentPostComments.ForEach(commenent => commentTextBox.text += commenent.score + " : " + commenent.author + " : " + commenent.body + "\n");
 
+        if(reddit.CurrentPostComments.Count <= 3)
+        {
+            LoadPost();
+            return;
+        }
+
         currentComment = reddit.CurrentPostComments[0];
         commentTitle.text = currentComment.author + " (" + currentComment.score + ")";
         commentTextBox.text = ParseHtml(currentComment.body);
@@ -250,7 +262,7 @@ public class Hivemind : MonoBehaviour {
 
         addition.transform.localPosition = addSpot;
 
-        ScoreManager.Instance.SubmitScore("antti", totalScore);
+        ScoreManager.Instance.SubmitScore(PlayerPrefs.GetString("PlayerName"), totalScore);
 
         Tweener.Instance.ScaleTo(addition.transform, Vector3.one, 0.33f, 0f, TweenEasings.BounceEaseOut);
         Invoke("MoveAddition", 0.75f);

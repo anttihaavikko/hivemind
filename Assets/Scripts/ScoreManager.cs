@@ -217,7 +217,7 @@ public class ScoreManager : MonoBehaviour {
             check = PlayerPrefs.GetInt("CheckNumber");
         }
 
-        Debug.Log("loaded: " + playerName + ", " + score + ", " + check);
+        //Debug.Log("loaded: " + playerName + ", " + score + ", " + check);
 	}
 
 	private void SavePrefs() {

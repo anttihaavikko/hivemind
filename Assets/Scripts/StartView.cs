@@ -30,7 +30,14 @@ public class StartView : MonoBehaviour {
 
     public void StartGame()
     {
-        SceneManager.LoadSceneAsync("Main");
+        if (PlayerPrefs.HasKey("PlayerName"))
+        {
+            SceneManager.LoadSceneAsync("Main");
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("Entry");
+        }
     }
 
     public void QuitGame()

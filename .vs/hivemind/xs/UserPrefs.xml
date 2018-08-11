@@ -1,13 +1,14 @@
 ﻿<Properties StartupConfiguration="{F8EDC7DB-76B8-FBFC-2CFB-7717A94A5E23}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ScoreManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/EntryView.cs">
     <Files>
       <File FileName="Assets/Scripts/Hivemind.cs" Line="62" Column="6" />
       <File FileName="Assets/Scripts/RedditConnector.cs" Line="46" Column="50" />
       <File FileName="Assets/Scripts/CustomButton.cs" Line="18" Column="28" />
       <File FileName="Assets/Scripts/EffectCamera.cs" Line="43" Column="29" />
-      <File FileName="Assets/Scripts/ScoreManager.cs" Line="72" Column="13" />
+      <File FileName="Assets/Scripts/ScoreManager.cs" Line="212" Column="21" />
       <File FileName="Assets/Scripts/StartView.cs" Line="15" Column="15" />
+      <File FileName="Assets/Scripts/EntryView.cs" Line="7" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

@@ -219,8 +219,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 33, y: -130.65001}
-  m_SizeDelta: {x: 700, y: 79.3}
+  m_AnchoredPosition: {x: 33, y: -145.5}
+  m_SizeDelta: {x: 700, y: 64.4}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &285220147
 CanvasRenderer:
@@ -256,8 +256,8 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 2
     m_MaxSize: 40
-    m_Alignment: 3
-    m_AlignByGeometry: 1
+    m_Alignment: 0
+    m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
@@ -824,17 +824,17 @@ Prefab:
     - target: {fileID: 224437928274582618, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224437928274582618, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 194
       objectReference: {fileID: 0}
     - target: {fileID: 224437928274582618, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -116.66667
+      value: -121
       objectReference: {fileID: 0}
     - target: {fileID: 224437928274582618, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
@@ -880,30 +880,30 @@ Prefab:
         type: 2}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1248792589}
     - target: {fileID: 1952943430367172, guid: fc811a392246c4412b98119c88f6e8a0, type: 2}
       propertyPath: m_Name
-      value: Retry Button
+      value: Ok Button
       objectReference: {fileID: 0}
     - target: {fileID: 224437928274582618, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: m_LocalScale.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224437928274582618, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: m_LocalScale.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224437928274582618, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: m_LocalScale.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114749697263358086, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: m_Text
-      value: RETRY
+      value: OK
       objectReference: {fileID: 0}
     - target: {fileID: 114753367318687634, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
@@ -923,7 +923,7 @@ Prefab:
     - target: {fileID: 114753367318687634, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
       propertyPath: clickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Retry
+      value: StartGame
       objectReference: {fileID: 0}
     - target: {fileID: 114753367318687634, guid: fc811a392246c4412b98119c88f6e8a0,
         type: 2}
@@ -1212,6 +1212,7 @@ GameObject:
   - component: {fileID: 1248792592}
   - component: {fileID: 1248792591}
   - component: {fileID: 1248792590}
+  - component: {fileID: 1248792589}
   m_Layer: 5
   m_Name: Reddit Canvas
   m_TagString: Untagged
@@ -1219,6 +1220,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1248792589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1248792588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddd26999549e46db829e7ea3aaf4ca9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameText: {fileID: 285220148}
 --- !u!114 &1248792590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1797,7 +1810,7 @@ GameObject:
   - component: {fileID: 2139801645}
   - component: {fileID: 2139801644}
   m_Layer: 5
-  m_Name: Comment Window
+  m_Name: Entry Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

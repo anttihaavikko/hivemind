@@ -61,7 +61,6 @@ public class EffectCamera : MonoBehaviour
     {
         filters = GetComponent<PostProcessingBehaviour>();
         originalPos = transform.position;
-        Invoke("StartFade", 0.5f);
     }
 
     void Update()
