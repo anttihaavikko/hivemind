@@ -156,9 +156,7 @@ public class Face : MonoBehaviour {
 		Vector2 lookPos = lookTarget ? Vector2.MoveTowards (transform.parent.position, lookTarget.position, 1f) : Vector2.zero;
 
 		if(followMouse) {
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			Vector3 mouseInWorld = Camera.main.transform.position - ray.direction * Camera.main.transform.position.z;
-			lookPos = mouseInWorld;
+            lookPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		}
 
 		lookPos = Quaternion.Euler(new Vector3(0, 0, -transform.parent.rotation.eulerAngles.z)) * lookPos;

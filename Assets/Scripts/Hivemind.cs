@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -17,6 +18,7 @@ public class Hivemind : MonoBehaviour {
     public Transform retryButton;
 
     public RectTransform postWindow, commentWindow, voteWindow;
+    public Transform alien, alienSpotLoading, alienSpotVoting;
 
     RedditComment currentComment;
 
@@ -55,8 +57,20 @@ public class Hivemind : MonoBehaviour {
         shownScore = totalScore = ScoreManager.Instance.GetValidatedScore();
         scoreText.text = totalScore.ToString();
 
-        LoadPost();
+        MoveAlienLoading();
+
+        Invoke("LoadPost", 0.25f);
 	}
+
+    private void MoveAlienLoading()
+    {
+        Tweener.Instance.MoveTo(alien, alienSpotLoading.position, 1f, 0f, TweenEasings.QuarticEaseOut);
+    }
+
+    private void MoveAlienVoting()
+    {
+        Tweener.Instance.MoveTo(alien, alienSpotVoting.position, 1f, 0f, TweenEasings.QuarticEaseOut);
+    }
 
     void ShowPostWindow()
     {
@@ -141,6 +155,7 @@ public class Hivemind : MonoBehaviour {
     void StartPostLoading()
     {
         //HideWindows();
+        MoveAlienLoading();
         Invoke("LoadPost", 0.5f);
     }
 
@@ -157,7 +172,7 @@ public class Hivemind : MonoBehaviour {
 
     void LoadPost()
     {
-        ShowInfo("Loading...");
+        ShowInfo("\n\n Loading...");
         textBox.text = "";
         commentTextBox.text = "";
         image.sprite = null;
@@ -182,10 +197,12 @@ public class Hivemind : MonoBehaviour {
 
         if (reddit.errorMessage != null)
         {
-            ShowInfo(reddit.errorMessage + "\n", 40);
+            ShowInfo("\n\n" + reddit.errorMessage, 40);
             Tweener.Instance.ScaleTo(retryButton, Vector3.one, 0.3f, 0, TweenEasings.BounceEaseOut);
             return;
         }
+
+        Invoke("MoveAlienVoting", 0.5f);
 
         var post = reddit.CurrentPost;
 
@@ -208,7 +225,7 @@ public class Hivemind : MonoBehaviour {
 
         if (!string.IsNullOrEmpty(post.thumbnail) && post.thumbnail != "self" && post.thumbnail != "spoiler" && post.thumbnail != "default")
         {
-            StartCoroutine(reddit.ShowThumbIn(image));
+            //StartCoroutine(reddit.ShowThumbIn(image));
             StartCoroutine(reddit.ShowImageIn(fullImage, true));
         }
         else

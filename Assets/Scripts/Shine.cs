@@ -17,6 +17,9 @@ public class Shine : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        focus = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
 		Vector3 direction = (focus - transform.position).normalized;
 		direction.z = originalPos.z;
 		direction.x = mirrorParent ? mirrorParent.localScale.x * direction.x : direction.x;

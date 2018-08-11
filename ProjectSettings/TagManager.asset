@@ -41,3 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Mid
+    uniqueID: 1091655521
+    locked: 0
+  - name: Alien
+    uniqueID: 1620419547
+    locked: 0
+  - name: Blush
+    uniqueID: 3427311153
+    locked: 0
+  - name: Top
+    uniqueID: 545641699
+    locked: 0

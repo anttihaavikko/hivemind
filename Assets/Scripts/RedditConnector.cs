@@ -11,7 +11,7 @@ public class RedditConnector {
 
     private string token = null;
     private DateTime tokenCreationTime;
-    private string postFilters = "r/gifs/hot";
+    private string postFilters = "hot";
     private string deviceId;
 
     private List<string> seenPosts;
