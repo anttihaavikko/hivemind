@@ -25,6 +25,8 @@ public class RedditConnector {
     public List<RedditComment> CurrentPostComments { get; internal set; }
     public List<RedditPost> AllLoadedPosts { get; internal set; }
 
+    bool customUserAgent = true;
+
     public RedditConnector()
     {
         CurrentPostComments = new List<RedditComment>();
@@ -54,7 +56,7 @@ public class RedditConnector {
 
         UnityWebRequest www = UnityWebRequest.Post("https://www.reddit.com/api/v1/access_token", content);
 
-        if (Application.platform != RuntimePlatform.WebGLPlayer)
+        if (customUserAgent && Application.platform != RuntimePlatform.WebGLPlayer)
             www.SetRequestHeader("User-Agent", userAgent);
 
         string authorization = BasicAuth(Secrets.redditApiKey, "");
@@ -113,7 +115,7 @@ public class RedditConnector {
 
         www.SetRequestHeader("Authorization", "Bearer " + token);
 
-        if (Application.platform != RuntimePlatform.WebGLPlayer)
+        if (customUserAgent && Application.platform != RuntimePlatform.WebGLPlayer)
             www.SetRequestHeader("User-Agent", userAgent);
 
         //Debug.Log("Loading posts with filter '" + postFilters + "'");
@@ -190,7 +192,7 @@ public class RedditConnector {
         UnityWebRequest www = UnityWebRequest.Get("https://oauth.reddit.com" + CurrentPost.permalink + "/.json?sort=controversial");
         www.SetRequestHeader("Authorization", "Bearer " + token);
 
-        if(Application.platform != RuntimePlatform.WebGLPlayer)
+        if(customUserAgent && Application.platform != RuntimePlatform.WebGLPlayer)
             www.SetRequestHeader("User-Agent", userAgent);
 
         yield return www.Send();
@@ -264,8 +266,6 @@ public class RedditConnector {
         var horizontal = pic.width >= pic.height;
         float ratio = (float)pic.height / (float)pic.width;
 
-        Debug.Log(ratio);
-
         using (WWW www = new WWW(pic.url))
         {
             yield return www;
@@ -274,7 +274,7 @@ public class RedditConnector {
             Rect rec = new Rect(0, 0, tex.width, tex.height);
             image.sprite = Sprite.Create(tex, rec, Vector2.zero, 100);
 
-            int maxSize = (ratio < 0.75 || ratio > 1.25) ? 500 : 400;
+            int maxSize = (ratio < 0.75 || ratio > 1.25) ? 600 : 450;
 
             image.rectTransform.sizeDelta = horizontal ?
                 new Vector2(maxSize, maxSize * ratio) :

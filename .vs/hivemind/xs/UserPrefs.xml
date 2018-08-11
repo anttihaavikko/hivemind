@@ -2,15 +2,15 @@
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Hivemind.cs">
     <Files>
-      <File FileName="Assets/Scripts/Hivemind.cs" Line="72" Column="48" />
-      <File FileName="Assets/Scripts/RedditConnector.cs" Line="250" Column="30" />
+      <File FileName="Assets/Scripts/Hivemind.cs" Line="214" Column="29" />
+      <File FileName="Assets/Scripts/RedditConnector.cs" Line="265" Column="60" />
+      <File FileName="Assets/Scripts/CustomButton.cs" Line="18" Column="28" />
+      <File FileName="Assets/Scripts/EffectCamera.cs" Line="43" Column="29" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/anttih/unity/hivemind/Assets/Scripts/EffectCamera.cs" relfile="Assets/Scripts/EffectCamera.cs" line="15" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />

@@ -8,12 +8,34 @@ using UnityEngine.Video;
 public class Hivemind : MonoBehaviour {
 
     public Text textBox, commentTextBox, header, postTitle, commentTitle;
+    public Text info, scoreText, addition;
     public Image image, fullImage;
     public GameObject videoImage;
     public VideoPlayer video;
     public RenderTexture videoTexture;
+    public Transform retryButton;
 
-    private RedditConnector reddit;
+    public RectTransform postWindow, commentWindow, voteWindow;
+
+    RedditComment currentComment;
+
+    RedditConnector reddit;
+
+    int postOffX = -1500;
+    int postOnX = -299;
+
+    int commentOffX = 1500;
+    int commentOnX = 377;
+
+    int voteOffX = 1500;
+    int voteOnX = 528;
+
+    int totalScore = 0;
+    float shownScore = 0;
+
+    Vector3 addSpot;
+    bool adding;
+    bool canVote = true;
 
 	// Use this for initialization
 	void Start () {
@@ -21,14 +43,63 @@ public class Hivemind : MonoBehaviour {
 
         reddit = new RedditConnector();
 
+        postWindow.localPosition = GetWindowPosition(postWindow, postOffX);
+        commentWindow.localPosition = GetWindowPosition(commentWindow, commentOffX);
+        voteWindow.localPosition = GetWindowPosition(voteWindow, voteOffX);
+
+        addSpot = addition.transform.localPosition;
+
         LoadPost();
 	}
+
+    void ShowPostWindow()
+    {
+        Tweener.Instance.MoveLocalTo(postWindow, GetWindowPosition(postWindow, postOnX), 1f, 0f, TweenEasings.BounceEaseOut);
+    }
+
+    void ShowCommentWindow()
+    {
+        Tweener.Instance.MoveLocalTo(commentWindow, GetWindowPosition(commentWindow, commentOnX), 1f, 0f, TweenEasings.BounceEaseOut);
+    }
+
+    void ShowVoteWindow()
+    {
+        canVote = true;
+        Tweener.Instance.MoveLocalTo(voteWindow, GetWindowPosition(voteWindow, voteOnX), 1f, 0f, TweenEasings.BounceEaseOut);
+    }
+
+    void HidePostWindow()
+    {
+        Tweener.Instance.MoveLocalTo(postWindow, GetWindowPosition(postWindow, postOffX), 0.5f, 0f, TweenEasings.QuarticEaseOut);
+    }
+
+    void HideCommentWindow()
+    {
+        Tweener.Instance.MoveLocalTo(commentWindow, GetWindowPosition(commentWindow, commentOffX), 0.5f, 0f, TweenEasings.QuarticEaseOut);
+    }
+
+    void HideVoteWindow()
+    {
+        Tweener.Instance.MoveLocalTo(voteWindow, GetWindowPosition(voteWindow, voteOffX), 0.5f, 0f, TweenEasings.QuarticEaseOut);
+    }
+
+    void HideWindows()
+    {
+        HidePostWindow();
+        HideCommentWindow();
+        HideVoteWindow();
+    }
+
+    Vector3 GetWindowPosition(RectTransform t, float x)
+    {
+        return new Vector3(x, t.localPosition.y, t.localPosition.z);
+    }
 	
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space))
         {
-            LoadPost();
+            StartPostLoading();
         }
 
         if (Input.GetKeyDown(KeyCode.D))
@@ -42,11 +113,35 @@ public class Hivemind : MonoBehaviour {
         {
             Application.OpenURL("https://reddit.com" + reddit.CurrentPost.permalink);
         }
+
+        if(adding)
+        {
+            shownScore = Mathf.MoveTowards(shownScore, totalScore, 0.2f);
+            scoreText.text = Mathf.RoundToInt(shownScore).ToString();
+        }
+    }
+
+    void StartPostLoading()
+    {
+        //HideWindows();
+        Invoke("LoadPost", 0.5f);
+    }
+
+    void ShowInfo(string message, int fontSize = 50)
+    {
+        info.text = "<size=" + fontSize + ">" + message + "</size>";
+        Tweener.Instance.ScaleTo(info.transform, Vector3.one, 0.25f, 0, TweenEasings.BounceEaseOut);
+    }
+
+    void HideInfo()
+    {
+        Tweener.Instance.ScaleTo(info.transform, Vector3.zero, 0.25f, 0, TweenEasings.CubicEaseInOut);
     }
 
     void LoadPost()
     {
-        textBox.text = "Loading...";
+        ShowInfo("Loading...");
+        textBox.text = "";
         commentTextBox.text = "";
         image.sprite = null;
         fullImage.sprite = null;
@@ -66,10 +161,12 @@ public class Hivemind : MonoBehaviour {
 
     void ShowPost()
     {
+        HideInfo();
 
         if (reddit.errorMessage != null)
         {
-            textBox.text = reddit.errorMessage;
+            ShowInfo(reddit.errorMessage + "\n", 40);
+            Tweener.Instance.ScaleTo(retryButton, Vector3.one, 0.3f, 0, TweenEasings.BounceEaseOut);
             return;
         }
 
@@ -84,7 +181,7 @@ public class Hivemind : MonoBehaviour {
         //str += post.score + "\n\n";
         str += post.selftext;
 
-        postTitle.text = post.title;
+        postTitle.text = ParseHtml(post.title);
         header.text = post.subreddit_name_prefixed + "\nu/" + post.author;
 
         //Debug.Log(post.preview.reddit_video_preview.fallback_url);
@@ -111,12 +208,69 @@ public class Hivemind : MonoBehaviour {
             videoImage.SetActive(true);
         }
 
-        textBox.text = str;
+        textBox.text = ParseHtml(str);
 
         //reddit.CurrentPostComments.ForEach(commenent => commentTextBox.text += commenent.score + " : " + commenent.author + " : " + commenent.body + "\n");
 
-        var topComment = reddit.CurrentPostComments[0];
-        commentTitle.text = topComment.author + " (" + topComment.score + ")";
-        commentTextBox.text = topComment.body;
+        currentComment = reddit.CurrentPostComments[0];
+        commentTitle.text = currentComment.author + " (" + currentComment.score + ")";
+        commentTextBox.text = ParseHtml(currentComment.body);
+
+        Invoke("ShowPostWindow", 0.25f);
+        Invoke("ShowCommentWindow", 0.75f);
+        Invoke("ShowVoteWindow", 1.25f);
+    }
+
+    public void Vote(int score)
+    {
+        if (!canVote)
+            return;
+
+        canVote = false;
+        adding = false;
+
+        var success = (score < 0 && currentComment.score < 0 || score > 0 && currentComment.score > 0);
+        var dir = success ? 1 : -1;
+        var amt = Mathf.Abs(currentComment.score);
+        var sign = success ? "+" : "-";
+        totalScore += amt * dir;
+        addition.text = sign + amt.ToString();
+
+        addition.transform.localPosition = addSpot;
+
+        Tweener.Instance.ScaleTo(addition.transform, Vector3.one, 0.33f, 0f, TweenEasings.BounceEaseOut);
+        Invoke("MoveAddition", 0.75f);
+
+        Invoke("HideVoteWindow", 0.5f);
+        Invoke("HideCommentWindow", 0.75f);
+        Invoke("HidePostWindow", 1f);
+        Invoke("StartPostLoading", 1.25f);
+    }
+
+    string ParseHtml(string text)
+    {
+        text = text.Replace("&amp;", "&");
+        text = text.Replace("&gt;", ">");
+        text = text.Replace("&lt;", "<");
+        return text;
+    }
+
+    void MoveAddition()
+    {
+        Tweener.Instance.MoveLocalTo(addition.transform, scoreText.transform.localPosition, 0.5f, 0, TweenEasings.CubicEaseIn);
+        Tweener.Instance.ScaleTo(addition.transform, Vector3.zero, 0.5f, 0, TweenEasings.CubicEaseIn);
+        Invoke("EnableAddition", 0.3f);
+    }
+
+    void EnableAddition()
+    {
+        adding = true;
+    }
+
+    public void Retry()
+    {
+        HideInfo();
+        Tweener.Instance.ScaleTo(retryButton, Vector3.zero, 0.25f, 0, TweenEasings.CubicEaseIn);
+        Invoke("LoadPost", 0.5f);
     }
 }
