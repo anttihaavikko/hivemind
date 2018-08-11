@@ -29,6 +29,8 @@ public class CustomButton : MonoBehaviour {
         hovering = true;
         //AudioManager.Instance.PlayEffectAt(14, transform.position, 0.1f);
         colorImage.color = hoverColor;
+
+        AudioManager.Instance.PlayEffectAt(5, transform.position, 0.5f);
     }
 
     public void OnMouseExit()
@@ -48,6 +50,8 @@ public class CustomButton : MonoBehaviour {
         //      Manager.Instance.Calculate ();
         clicked = true;
         clickEvent.Invoke();
+
+        AudioManager.Instance.PlayEffectAt(6, transform.position, 1f);
 
         ChangeVisibility(false);
 

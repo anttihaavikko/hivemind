@@ -27,4 +27,9 @@ public class AlienMover : MonoBehaviour {
 
         transform.localPosition = originalPosition + Vector3.up * 0.2f * Mathf.Abs(sinValY) + Vector3.right * sinValX * 0.3f;
     }
+
+    public void DoIdleSound()
+    {
+        AudioManager.Instance.PlayEffectAt(3, transform.position, 0.02f);
+    }
 }

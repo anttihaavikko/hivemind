@@ -1,9 +1,12 @@
 ﻿<Properties StartupConfiguration="{F8EDC7DB-76B8-FBFC-2CFB-7717A94A5E23}|">
   <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/RedditConnector.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/AlienMover.cs">
     <Files>
-      <File FileName="Assets/Scripts/Hivemind.cs" Line="27" Column="26" />
-      <File FileName="Assets/Scripts/RedditConnector.cs" Line="252" Column="30" />
+      <File FileName="Assets/Scripts/Hivemind.cs" Line="350" Column="32" />
+      <File FileName="Assets/Scripts/RedditConnector.cs" Line="142" Column="13" />
+      <File FileName="Assets/Scripts/AudioManager.cs" Line="22" Column="32" />
+      <File FileName="Assets/Scripts/CustomButton.cs" Line="57" Column="9" />
+      <File FileName="Assets/Scripts/AlienMover.cs" Line="31" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

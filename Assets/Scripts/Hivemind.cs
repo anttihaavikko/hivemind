@@ -18,6 +18,8 @@ public class Hivemind : MonoBehaviour {
     public RectTransform postWindow, commentWindow, voteWindow;
     public Transform alien, alienSpotLoading, alienSpotVoting;
 
+    public EffectCamera cam;
+
     RedditComment currentComment;
 
     RedditConnector reddit;
@@ -71,11 +73,15 @@ public class Hivemind : MonoBehaviour {
 
     private void MoveAlienLoading()
     {
+        AudioManager.Instance.PlayEffectAt(9, alien.position, 1f);
+        AudioManager.Instance.PlayEffectAt(10, alien.position, 1f);
         Tweener.Instance.MoveTo(alien, alienSpotLoading.position, 1f, 0f, TweenEasings.QuarticEaseOut);
     }
 
     private void MoveAlienVoting()
     {
+        AudioManager.Instance.PlayEffectAt(9, alien.position, 1f);
+        AudioManager.Instance.PlayEffectAt(10, alien.position, 1f);
         Tweener.Instance.MoveTo(alien, alienSpotVoting.position, 1f, 0f, TweenEasings.QuarticEaseOut);
     }
 
@@ -162,14 +168,22 @@ public class Hivemind : MonoBehaviour {
     void StartPostLoading()
     {
         //HideWindows();
+        AudioManager.Instance.Lowpass(false);
         MoveAlienLoading();
         Invoke("LoadPost", 0.5f);
     }
 
     void ShowInfo(string message, int fontSize = 50)
     {
-        info.text = "<size=" + fontSize + ">" + message + "</size>";
+        float vol = info.transform.localScale.x < 0.7f ? 0.5f : 0.25f;
+
+        var newtext = "<size=" + fontSize + ">" + message + "</size>";
+        if (newtext == info.text) vol = 0f;
+        info.text = newtext;
+
         Tweener.Instance.ScaleTo(info.transform, Vector3.one, 0.25f, 0, TweenEasings.BounceEaseOut);
+
+        AudioManager.Instance.PlayEffectAt(8, Vector3.zero, vol);
     }
 
     void HideInfo()
@@ -184,7 +198,7 @@ public class Hivemind : MonoBehaviour {
 
     void LoadPost(string loadingMessage)
     {
-        ShowInfo("\n\n " + loadingMessage);
+        ShowInfo("\n\n  " + loadingMessage);
         textBox.text = "";
         commentTextBox.text = "";
         image.sprite = null;
@@ -335,6 +349,21 @@ public class Hivemind : MonoBehaviour {
         if (votedPosts.Count > 500)
             votedPosts.RemoveAt(0);
 
+        if(success)
+        {
+            AudioManager.Instance.PlayEffectAt(0, Vector3.zero, 1f);
+        }
+        else
+        {
+            AudioManager.Instance.PlayEffectAt(1, Vector3.zero, 1f);
+            AudioManager.Instance.PlayEffectAt(2, Vector3.zero, 1f);
+
+            cam.BaseEffect(1.5f);
+
+            AudioManager.Instance.Lowpass(true);
+            AudioManager.Instance.targetPitch = 0.6f;
+        }
+
         PlayerPrefs.SetString("VotedPosts", System.String.Join(",", votedPosts.ToArray()));
     }
 
@@ -357,6 +386,10 @@ public class Hivemind : MonoBehaviour {
 
     void MoveAddition()
     {
+        AudioManager.Instance.targetPitch = 1f;
+
+        AudioManager.Instance.PlayEffectAt(4, addition.transform.position, 1f);
+
         Tweener.Instance.MoveLocalTo(addition.transform, scoreText.transform.localPosition, 0.5f, 0, TweenEasings.CubicEaseIn);
         Tweener.Instance.ScaleTo(addition.transform, Vector3.zero, 0.5f, 0, TweenEasings.CubicEaseIn);
         Invoke("EnableAddition", 0.3f);
@@ -364,7 +397,15 @@ public class Hivemind : MonoBehaviour {
 
     void EnableAddition()
     {
+        DoAdditionSound();
+        if (totalScore - shownScore > 10) Invoke("DoAdditionSound", 0.15f);
+        if (totalScore - shownScore > 50) Invoke("DoAdditionSound", 0.3f);
         adding = true;
+    }
+
+    void DoAdditionSound()
+    {
+        AudioManager.Instance.PlayEffectAt(7, scoreText.transform.position, 1.3f);
     }
 
     public void Retry()
