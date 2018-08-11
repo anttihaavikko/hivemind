@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -195,6 +192,13 @@ public class Hivemind : MonoBehaviour {
 
     void ShowPost()
     {
+        if(reddit.CurrentPost.num_comments < 3)
+        {
+            Debug.Log("Not enough comments...");
+            LoadPost();
+            return;
+        }
+
         HideInfo();
 
         if (reddit.errorMessage != null)
@@ -203,8 +207,6 @@ public class Hivemind : MonoBehaviour {
             Tweener.Instance.ScaleTo(retryButton, Vector3.one, 0.3f, 0, TweenEasings.BounceEaseOut);
             return;
         }
-
-        Invoke("MoveAlienVoting", 0.5f);
 
         var post = reddit.CurrentPost;
 
@@ -236,7 +238,6 @@ public class Hivemind : MonoBehaviour {
         }
 
         fullImage.gameObject.SetActive(!textOnlyPost);
-        image.gameObject.SetActive(textOnlyPost);
 
         if (post.preview != null && post.preview.reddit_video_preview != null && !string.IsNullOrEmpty(post.preview.reddit_video_preview.fallback_url))
         {
@@ -255,13 +256,33 @@ public class Hivemind : MonoBehaviour {
             return;
         }
 
+        Invoke("MoveAlienVoting", 0.5f);
+
+        PickComment();
+
         currentComment = reddit.CurrentPostComments[0];
-        commentTitle.text = currentComment.author + " (" + currentComment.score + ")";
+        commentTitle.text = currentComment.author;
         commentTextBox.text = ParseHtml(currentComment.body);
 
         Invoke("ShowPostWindow", 0.25f);
         Invoke("ShowCommentWindow", 0.75f);
         Invoke("ShowVoteWindow", 1.25f);
+    }
+
+    private void PickComment()
+    {
+        int targetDirection = Random.value < 0.35f ? 1 : -1;
+        currentComment = reddit.CurrentPostComments.Find(c => (int)Mathf.Sign(c.score) == targetDirection);
+        var str = "Trying to get post with " + targetDirection + " karma...";
+
+        if(currentComment == null) {
+            str += " Not found, getting random one";
+            currentComment = reddit.CurrentPostComments[Random.Range(0, 3)];
+        } else {
+            str += "Success!";
+        }
+
+        Debug.Log(str);
     }
 
     public void Vote(int score)
