@@ -678,17 +678,17 @@ MonoBehaviour:
     - m_Bone: {fileID: 0}
       m_BoneTransform: {fileID: 640947447}
       solverPosition: {x: 0, y: 0, z: 0}
-      solverRotation: {x: 0, y: 0, z: -0.87598985, w: 0.48232952}
+      solverRotation: {x: 0, y: 0, z: -0.90307164, w: 0.42948988}
       defaultLocalRotation: {x: -0, y: -0, z: -0.4160658, w: 0.9093345}
     - m_Bone: {fileID: 0}
       m_BoneTransform: {fileID: 1644492939}
       solverPosition: {x: 0, y: 0, z: 0}
-      solverRotation: {x: 0, y: 0, z: 0, w: 1}
+      solverRotation: {x: 0, y: 0, z: -0.34317243, w: 0.9392724}
       defaultLocalRotation: {x: 0, y: 0, z: 0.26931718, w: 0.96305156}
     m_Weight: 1
     m_RestoreDefaultPose: 1
-    targetPosition: {x: 1.4257952, y: 7.2961435, z: -0.000000029802322}
-    flip: 0
+    targetPosition: {x: 0.9039652, y: 7.133932, z: -0.000000029802322}
+    flip: 1
 --- !u!1 &105198005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1803,7 +1803,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 414980485}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.4584279, y: -0.8418803, z: 0.1347656}
+  m_LocalPosition: {x: -1.458428, y: -0.8418803, z: 0.1347656}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 532924094}
@@ -1835,17 +1835,17 @@ MonoBehaviour:
     - m_Bone: {fileID: 0}
       m_BoneTransform: {fileID: 1692668557}
       solverPosition: {x: 0, y: 0, z: 0}
-      solverRotation: {x: 0, y: 0, z: 0.84698755, w: 0.53161275}
+      solverRotation: {x: 0, y: 0, z: 0.8917163, w: 0.45259482}
       defaultLocalRotation: {x: -0, y: -0, z: -0.94657445, w: 0.32248542}
     - m_Bone: {fileID: 0}
       m_BoneTransform: {fileID: 430429500}
       solverPosition: {x: 0, y: 0, z: 0}
-      solverRotation: {x: 0, y: 0, z: 0, w: 1}
+      solverRotation: {x: 0, y: 0, z: 0.38143456, w: 0.92439586}
       defaultLocalRotation: {x: 0, y: 0, z: -0.21719705, w: 0.97612786}
     m_Weight: 1
     m_RestoreDefaultPose: 1
-    targetPosition: {x: -1.4284277, y: 7.4581194, z: -0.000000029802322}
-    flip: 1
+    targetPosition: {x: -0.9128844, y: 7.1616263, z: -0.000000029802322}
+    flip: 0
 --- !u!1 &430429498
 GameObject:
   m_ObjectHideFlags: 0
@@ -1884,13 +1884,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 430429498}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38143456, w: 0.92439586}
   m_LocalPosition: {x: 0.4900001, y: 0.00000008940697, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1692668557}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 44.845}
 --- !u!1 &435586507
 GameObject:
   m_ObjectHideFlags: 0
@@ -7952,8 +7952,8 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0.43263447, y: 7.924593, z: 0}
-  - {x: 0.84670013, y: 7.6625814, z: 0}
-  - {x: 1.2607654, y: 7.400571, z: 0}
+  - {x: 0.8127376, y: 7.615365, z: 0}
+  - {x: 0.9039649, y: 7.133932, z: 0}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.15
@@ -8047,7 +8047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.49000016
+  m_Length: 0.4900003
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 1644492939}
   m_AttachedIK: {fileID: 100385164}
@@ -8057,14 +8057,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 640947443}
-  m_LocalRotation: {x: 0, y: 0, z: -0.87598985, w: 0.48232952}
+  m_LocalRotation: {x: 0, y: 0, z: -0.90307164, w: 0.42948988}
   m_LocalPosition: {x: 0.7725239, y: -0.40263414, z: -0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1644492939}
   m_Father: {fileID: 1109272627}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -122.325005}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -129.13}
 --- !u!1 &696133411
 GameObject:
   m_ObjectHideFlags: 0
@@ -12038,6 +12038,7 @@ MonoBehaviour:
   alienSpotVoting: {fileID: 1613673277}
   cam: {fileID: 519420030}
   speechBubble: {fileID: 767825959}
+  alientAnimation: {fileID: 532924095}
 --- !u!1 &1613673276
 GameObject:
   m_ObjectHideFlags: 0
@@ -12224,13 +12225,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1644492937}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.34317243, w: 0.9392724}
   m_LocalPosition: {x: 0.4900001, y: 0.00000008940697, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 640947447}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -40.141003}
 --- !u!1 &1655808945
 GameObject:
   m_ObjectHideFlags: 0
@@ -12719,8 +12720,8 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: -0.44092423, y: 7.934881, z: 0}
-  - {x: -0.8821886, y: 7.721841, z: 0}
-  - {x: -1.3234524, y: 7.508801, z: 0}
+  - {x: -0.8364389, y: 7.645626, z: 0}
+  - {x: -0.9128842, y: 7.161626, z: 0}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.15
@@ -12814,7 +12815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Length: 0.49000037
+  m_Length: 0.49000013
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 430429500}
   m_AttachedIK: {fileID: 414980487}
@@ -12824,14 +12825,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1692668553}
-  m_LocalRotation: {x: 0, y: 0, z: 0.84698755, w: 0.53161275}
+  m_LocalRotation: {x: 0, y: 0, z: 0.8917163, w: 0.45259482}
   m_LocalPosition: {x: 0.78281224, y: 0.47092444, z: -0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 430429500}
   m_Father: {fileID: 1109272627}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -244.229}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -233.82098}
 --- !u!224 &1711973059 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224631756902003992, guid: fc811a392246c4412b98119c88f6e8a0,

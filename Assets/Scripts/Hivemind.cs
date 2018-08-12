@@ -20,6 +20,7 @@ public class Hivemind : MonoBehaviour {
 
     public EffectCamera cam;
     public SpeechBubble speechBubble;
+    public Animator alientAnimation;
 
     RedditComment currentComment;
 
@@ -75,6 +76,8 @@ public class Hivemind : MonoBehaviour {
         Invoke("LoadPost", 0.25f);
 
         doTutorial = !PlayerPrefs.HasKey("Tutorial");
+
+        //if (Application.isEditor) doTutorial = true;
 	}
 
     private void MoveAlienLoading()
@@ -275,6 +278,8 @@ public class Hivemind : MonoBehaviour {
             return;
         }
 
+        speechBubble.Hide();
+
         HideInfo();
 
         if (reddit.errorMessage != null)
@@ -354,20 +359,26 @@ public class Hivemind : MonoBehaviour {
 
     System.Collections.IEnumerator DoTutorial()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.75f);
+        MoveAlienTo(alienSpotVoting.position + Vector3.down * 1f + Vector3.left * 2f);
+        yield return new WaitForSeconds(0.25f);
+        alientAnimation.SetBool("pointLeft", true);
         speechBubble.ShowMessage("This is a (post) fetched straight from (Reddit).");
         while (tutorialStep <= 0) yield return null;
+        alientAnimation.SetBool("pointLeft", false);
         speechBubble.Hide();
         ShowCommentWindow();
         yield return new WaitForSeconds(0.5f);
-        MoveAlienTo(alienSpotVoting.position + Vector3.down * 2f);
+        MoveAlienTo(alienSpotVoting.position + Vector3.down * 2.5f);
         yield return new WaitForSeconds(0.5f);
+        alientAnimation.SetBool("pointDown", true);
         speechBubble.ShowMessage("This is the (comment) you'll be (guessing) on.");
         while (tutorialStep <= 1) yield return null;
         speechBubble.ShowMessage("You need to guess (wether) the shown (comment)...");
         while (tutorialStep <= 2) yield return null;
         speechBubble.ShowMessage("...has (positive) or (negative) karma.");
         while (tutorialStep <= 3) yield return null;
+        alientAnimation.SetBool("pointDown", false);
         speechBubble.ShowMessage("You gain (more points) the (more karma) the comment has.");
         while (tutorialStep <= 4) yield return null;
         speechBubble.ShowMessage("But if you're (wrong), you (lose) the same amount.");
@@ -375,14 +386,17 @@ public class Hivemind : MonoBehaviour {
         speechBubble.ShowMessage("How well do you know your (Redditors)?");
         while (tutorialStep <= 6) yield return null;
         speechBubble.Hide();
-        MoveAlienTo(alienSpotVoting.position);
+        MoveAlienTo(alienSpotVoting.position + Vector3.down * 1f);
         ShowVoteWindow();
         yield return new WaitForSeconds(1f);
+        alientAnimation.SetBool("pointDown", true);
         speechBubble.ShowMessage("And these are your (options)...");
         while (tutorialStep <= 7) yield return null;
+        alientAnimation.SetBool("pointDown", false);
         speechBubble.ShowMessage("Lets give it a (go)!");
         while (tutorialStep <= 8) yield return null;
         speechBubble.Hide();
+        MoveAlienTo(alienSpotVoting.position);
 
         doTutorial = false;
         PlayerPrefs.SetString("Tutorial", "Done");
@@ -401,7 +415,19 @@ public class Hivemind : MonoBehaviour {
             str += "Success!";
         }
 
+        reddit.CurrentPostComments.Remove(currentComment);
+
+        Invoke("AlienComment", Random.Range(5f, 20f));
+
         Debug.Log(str);
+    }
+
+    void AlienComment()
+    {
+        var forAlien = reddit.CurrentPostComments.Find(c => c.score > 0 && c.body.Length < 50);
+
+        if (forAlien != null)
+            speechBubble.ShowMessage(forAlien.body);
     }
 
     public void Vote(int score)
@@ -412,7 +438,7 @@ public class Hivemind : MonoBehaviour {
         canVote = false;
         adding = false;
 
-        var success = (score < 0 && currentComment.score < 0 || score > 0 && currentComment.score > 0);
+        var success = (score < 0 && currentComment.score < 0 || score > 0 && currentComment.score > 2);
         var dir = success ? 1 : -1;
         var amt = Mathf.Abs(currentComment.score);
         var sign = success ? "+" : "-";
@@ -438,14 +464,20 @@ public class Hivemind : MonoBehaviour {
         if (votedPosts.Count > 500)
             votedPosts.RemoveAt(0);
 
+        CancelInvoke("AlienComment");
+
         if(success)
         {
             AudioManager.Instance.PlayEffectAt(0, Vector3.zero, 1f);
+
+            Invoke("Compliment", 0.25f);
         }
         else
         {
             AudioManager.Instance.PlayEffectAt(1, Vector3.zero, 1f);
             AudioManager.Instance.PlayEffectAt(2, Vector3.zero, 1f);
+
+            Invoke("Bark", 0.25f);
 
             cam.BaseEffect(2f);
 
@@ -502,5 +534,39 @@ public class Hivemind : MonoBehaviour {
         HideInfo();
         Tweener.Instance.ScaleTo(retryButton, Vector3.zero, 0.25f, 0, TweenEasings.CubicEaseIn);
         Invoke("LoadPost", 0.5f);
+    }
+
+    void Compliment()
+    {
+        string[] comms = {
+            "Great!",
+            "Nice!",
+            "Well done!",
+            "Good job!",
+            "Awesome!",
+            "Good guess!",
+            "Noice!",
+            "Whee...",
+            "Nicely done!",
+            "Success!"
+        };
+
+        speechBubble.ShowMessage(comms[Random.Range(0, comms.Length)]);
+    }
+
+    void Bark()
+    {
+        string[] comms = {
+            "Eww!",
+            "Too bad!",
+            "Better luck next time!",
+            "Ouch!",
+            "Dang!",
+            "Not even close!",
+            "Nope!",
+            "No way!"
+        };
+
+        speechBubble.ShowMessage(comms[Random.Range(0, comms.Length)]);
     }
 }

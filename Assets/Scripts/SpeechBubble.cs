@@ -26,6 +26,8 @@ public class SpeechBubble : MonoBehaviour {
 	public Color hiliteColor;
     string hiliteColorHex;
 
+    bool useColors = true;
+
 	// Use this for initialization
 	void Awake () {
 		textArea.text = "";
@@ -77,7 +79,8 @@ public class SpeechBubble : MonoBehaviour {
 				msg += ")";
 			}
 
-            textArea.text = msg.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>");
+            if(useColors)
+                textArea.text = msg.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>");
 
 			string letter = message.Substring (messagePos - 1, 1);
 
@@ -103,8 +106,10 @@ public class SpeechBubble : MonoBehaviour {
 		textArea.text = message;
 	}
 
-	public void ShowMessage(string str) {
+	public void ShowMessage(string str, bool colors = true) {
 		AudioManager.Instance.PlayEffectAt (13, Vector3.zero, 0.5f);
+
+        useColors = colors;
 
         //AudioManager.Instance.Highpass ();
 
