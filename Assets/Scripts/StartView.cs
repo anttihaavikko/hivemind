@@ -10,6 +10,7 @@ public class StartView : MonoBehaviour {
     int page = 0;
 
     public MoverWindow leaderboardsWindow, buttonsWindow, startWindow;
+    public Transform stripe;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +20,9 @@ public class StartView : MonoBehaviour {
         leaderboardsWindow.Show();
         buttonsWindow.Show();
         startWindow.Show();
+        Tweener.Instance.ScaleTo(stripe, Vector3.one, 0.5f, 0f, TweenEasings.BounceEaseOut);
+
+        //if (Application.isEditor) PlayerPrefs.DeleteKey("PlayerName");
 	}
 	
 	// Update is called once per frame
@@ -44,6 +48,7 @@ public class StartView : MonoBehaviour {
         leaderboardsWindow.Hide();
         buttonsWindow.Hide();
         startWindow.Hide();
+        Tweener.Instance.ScaleTo(stripe, new Vector3(1f, 0f, 1f), 0.2f, 0.5f, TweenEasings.QuadraticEaseIn);
     }
 
     public void DelayedStartGame()
