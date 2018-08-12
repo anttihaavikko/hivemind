@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class StartView : MonoBehaviour {
 
     public Text positions, scores;
+    public Text pbPos, pbScore;
     int page = 0;
 
     public MoverWindow leaderboardsWindow, buttonsWindow, startWindow;
@@ -29,6 +30,9 @@ public class StartView : MonoBehaviour {
 	void Update () {
         positions.text = ScoreManager.Instance.leaderBoardPositionsString;
         scores.text = ScoreManager.Instance.leaderBoardScoresString;
+
+        pbPos.text = ScoreManager.Instance.personalBestPos;
+        pbScore.text = ScoreManager.Instance.personalBestScore;
 	}
 
     public void NextPage()

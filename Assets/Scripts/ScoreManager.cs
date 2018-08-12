@@ -47,6 +47,8 @@ public class ScoreManager : MonoBehaviour {
 
 	public bool endReached = false;
 
+    public string personalBestPos, personalBestScore;
+
 	private TouchScreenKeyboard keyboard = null;
 
 	/******/
@@ -103,6 +105,10 @@ public class ScoreManager : MonoBehaviour {
 				}
 			}
 
+            if(playerName != "") {
+                FindPlayerRank();
+            }
+
 			endReached = (lb.scores.Length < 9);
 
 		} else {
@@ -124,6 +130,9 @@ public class ScoreManager : MonoBehaviour {
 		if (string.IsNullOrEmpty (www.error)) {
 			localRank = int.Parse (www.text);
 			localScoreString = (score > 0) ? FormatLeaderboardRow (localRank, playerName, score, "") : "";
+
+            personalBestPos = localRank + ". " + playerName;
+            personalBestScore = score.ToString();
 		}
 	}
 
