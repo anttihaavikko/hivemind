@@ -22,12 +22,14 @@ public class Hivemind : MonoBehaviour {
     public SpeechBubble speechBubble;
     public Animator alientAnimation;
 
+    public MoverWindow comboWindow;
+
     RedditComment currentComment;
 
     RedditConnector reddit;
 
     int postOffX = -1500;
-    int postOnX = -299;
+    int postOnX = -336;
 
     int commentOffX = 1500;
     int commentOnX = 377;
@@ -49,7 +51,15 @@ public class Hivemind : MonoBehaviour {
     List<string> votedPosts;
 
     bool doTutorial = true;
+    bool doComboTutorial = true;
     int tutorialStep = 0;
+
+    int combo = 0;
+
+    int multiplier = 1;
+
+    public ComboNode[] comboNodes;
+    bool canUseBonus = true;
 
 	// Use this for initialization
 	void Start () {
@@ -76,6 +86,7 @@ public class Hivemind : MonoBehaviour {
         Invoke("LoadPost", 0.25f);
 
         doTutorial = !PlayerPrefs.HasKey("Tutorial");
+        doComboTutorial = !PlayerPrefs.HasKey("ComboTutorial");
 
         //if (Application.isEditor) doTutorial = true;
 	}
@@ -154,6 +165,7 @@ public class Hivemind : MonoBehaviour {
         HidePostWindow();
         HideCommentWindow();
         HideVoteWindow();
+        HideComboWindow();
     }
 
     Vector3 GetWindowPosition(RectTransform t, float x)
@@ -175,6 +187,9 @@ public class Hivemind : MonoBehaviour {
                 video.Play();
             }
 
+            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+                AddCombo();
+
             if (Input.GetKeyDown(KeyCode.D))
             {
                 File.WriteAllText(Application.dataPath + "/dump_posts.json", reddit.postsJSON);
@@ -188,7 +203,7 @@ public class Hivemind : MonoBehaviour {
             }
         }
 
-        if(Input.anyKeyDown && doTutorial)
+        if(Input.anyKeyDown && (doTutorial || doComboTutorial))
         {
             tutorialStep++;
         }
@@ -289,6 +304,8 @@ public class Hivemind : MonoBehaviour {
             return;
         }
 
+        multiplier = 1;
+
         var post = reddit.CurrentPost;
 
         var str = "";
@@ -354,7 +371,41 @@ public class Hivemind : MonoBehaviour {
         {
             Invoke("ShowCommentWindow", 0.75f);
             Invoke("ShowVoteWindow", 1.25f);
+
+            if(!doComboTutorial)
+                Invoke("ShowComboWindow", 1.5f);
         }
+    }
+
+    void ShowComboWindow()
+    {
+        comboWindow.Show();
+    }
+
+    void HideComboWindow()
+    {
+        comboWindow.Hide();
+    }
+
+    System.Collections.IEnumerator DoComboTutorial()
+    {
+        yield return new WaitForSeconds(1f);
+        speechBubble.Hide();
+        yield return new WaitForSeconds(0.75f);
+        comboWindow.Show();
+        MoveAlienTo(alienSpotLoading.position + Vector3.down * 3f + Vector3.left * 5f);
+        yield return new WaitForSeconds(1f);
+        alientAnimation.SetBool("pointDown", true);
+        speechBubble.ShowMessage("You can earn different usable (bonuses) by getting (streaks).");
+        while (tutorialStep <= 0) yield return null;
+        speechBubble.Hide();
+        yield return new WaitForSeconds(0.4f);
+        comboWindow.Hide();
+        yield return new WaitForSeconds(0.3f);
+        StartPostLoading();
+
+        doComboTutorial = false;
+        PlayerPrefs.SetString("ComboTutorial", "Done");
     }
 
     System.Collections.IEnumerator DoTutorial()
@@ -424,10 +475,46 @@ public class Hivemind : MonoBehaviour {
 
     void AlienComment()
     {
-        var forAlien = reddit.CurrentPostComments.Find(c => c.score > 0 && c.body.Length < 50);
+        var forAlien = reddit.CurrentPostComments.Find(c => c.score > 2 && c.body.Length < 50);
 
         if (forAlien != null)
-            speechBubble.ShowMessage(forAlien.body);
+            speechBubble.ShowMessage(forAlien.body, false);
+    }
+
+    void FillCombo()
+    {
+        comboNodes[combo - 1].Toggle(true);
+    }
+
+    void AddCombo()
+    {
+        combo++;
+        if (combo > 10) combo = 10;
+
+        if (doComboTutorial)
+            comboWindow.Show();
+
+        Invoke("FillCombo", doComboTutorial ? 1.5f : 0.25f);
+    }
+
+    void ClearCombo()
+    {
+        var pos = combo - 1;
+
+        if (combo == 0)
+            return;
+        
+        combo = 0;
+
+        UpdateComboPoints(pos);
+    }
+
+    void UpdateComboPoints(int startFrom)
+    {
+        for (int i = startFrom; i >= combo; i--)
+        {
+            comboNodes[i].Toggle(false, 0.9f - i * 0.1f);
+        }
     }
 
     public void Vote(int score)
@@ -438,26 +525,47 @@ public class Hivemind : MonoBehaviour {
         canVote = false;
         adding = false;
 
-        var success = (score < 0 && currentComment.score < 0 || score > 0 && currentComment.score > 2);
+        var success = (score < 0 && currentComment.score < 0 || score > 0);
         var dir = success ? 1 : -1;
         var amt = Mathf.Abs(currentComment.score);
         var sign = success ? "+" : "-";
-        totalScore += amt * dir;
         addition.text = sign + amt.ToString();
 
-        scoreChangeSpeed = amt * Time.deltaTime;
+        if(multiplier > 1 && dir > 0) {
+            addition.text += "<size=28>X</size>" + multiplier;
+        }
+
+        totalScore += amt * dir * multiplier;
+
+        scoreChangeSpeed = amt * multiplier * Time.deltaTime;
 
         addition.transform.localPosition = addSpot;
 
         ScoreManager.Instance.SubmitScore(PlayerPrefs.GetString("PlayerName"), totalScore);
 
         Tweener.Instance.ScaleTo(addition.transform, Vector3.one, 0.33f, 0f, TweenEasings.BounceEaseOut);
-        Invoke("MoveAddition", 0.75f);
+        Invoke("MoveAddition", 1f);
 
         Invoke("HideVoteWindow", 0.5f);
-        Invoke("HideCommentWindow", 0.75f);
-        Invoke("HidePostWindow", 1f);
-        Invoke("StartPostLoading", 1.25f);
+        Invoke("HideCommentWindow", 2f);
+        Invoke("HidePostWindow", 2.5f);
+
+        if(success) {
+            AddCombo();
+        } else {
+            ClearCombo();
+
+            //Application.OpenURL("https://reddit.com" + reddit.CurrentPost.permalink);
+            //Debug.Log(currentComment.score + " by " + currentComment.author + " : " + currentComment.body);
+        }
+
+        if(doComboTutorial && success) {
+            tutorialStep = 0;
+            StartCoroutine(DoComboTutorial());
+        } else {
+            Invoke("HideComboWindow", 3f);
+            Invoke("StartPostLoading", 3.2f);
+        }
 
         votedPosts.Add(reddit.CurrentPost.id);
 
@@ -568,5 +676,52 @@ public class Hivemind : MonoBehaviour {
         };
 
         speechBubble.ShowMessage(comms[Random.Range(0, comms.Length)]);
+    }
+
+    public void Skip()
+    {
+        if (!canUseBonus || !canVote) return;
+
+        canVote = false;
+        adding = false;
+
+        Invoke("HideVoteWindow", 0.1f);
+        Invoke("HideCommentWindow", 0.25f);
+        Invoke("HidePostWindow", 0.5f);
+        Invoke("HideComboWindow", 0.75f);
+        Invoke("StartPostLoading", 0.9f);
+        UseBonus(1);
+    }
+
+    public void Multiply(int x)
+    {
+        if (!canUseBonus || !canVote) return;
+
+        multiplier = x;
+
+        if(x == 2) UseBonus(2);
+        if (x == 10) UseBonus(4);
+    }
+
+    public void Auto()
+    {
+        if (!canUseBonus || !canVote) return;
+
+        Vote(currentComment.score);
+        UseBonus(3);
+    }
+
+    private void UseBonus(int amt)
+    {
+        combo -= amt;
+        UpdateComboPoints(combo + amt - 1);
+
+        canUseBonus = false;
+        Invoke("EnableBonusUsage", 1.2f);
+    }
+
+    void EnableBonusUsage()
+    {
+        canUseBonus = true;
     }
 }

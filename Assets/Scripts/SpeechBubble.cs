@@ -47,7 +47,8 @@ public class SpeechBubble : MonoBehaviour {
 			if (!done) {
 				done = true;
 				messagePos = -1;
-                textArea.text = textArea.text = message.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>");;
+
+                textArea.text = useColors ? message.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>") : message;
 			} else {
 				if (messageQue.Count > 0) {
 					PopMessage ();
@@ -75,12 +76,11 @@ public class SpeechBubble : MonoBehaviour {
 			int openCount = msg.Split('(').Length - 1;
 			int closeCount = msg.Split(')').Length - 1;
 
-			if (openCount > closeCount) {
+            if (openCount > closeCount && useColors) {
 				msg += ")";
 			}
 
-            if(useColors)
-                textArea.text = msg.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>");
+            textArea.text = useColors ? message.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>") : message;
 
 			string letter = message.Substring (messagePos - 1, 1);
 
