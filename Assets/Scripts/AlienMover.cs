@@ -8,6 +8,9 @@ public class AlienMover : MonoBehaviour {
 
     private Vector3 originalPosition;
 
+    public RectTransform bubble;
+    public Transform bubblePosition;
+
     float offsetY, offsetX;
 
     // Use this for initialization
@@ -26,6 +29,8 @@ public class AlienMover : MonoBehaviour {
         float sinValX = Mathf.Sin(Time.time * speed * 0.7f + offsetX * Mathf.PI);
 
         transform.localPosition = originalPosition + Vector3.up * 0.2f * Mathf.Abs(sinValY) + Vector3.right * sinValX * 0.3f;
+
+        bubble.position = bubblePosition.position;
     }
 
     public void DoIdleSound()

@@ -19,6 +19,7 @@ public class Hivemind : MonoBehaviour {
     public Transform alien, alienSpotLoading, alienSpotVoting;
 
     public EffectCamera cam;
+    public SpeechBubble speechBubble;
 
     RedditComment currentComment;
 
@@ -46,6 +47,9 @@ public class Hivemind : MonoBehaviour {
 
     List<string> votedPosts;
 
+    bool doTutorial = true;
+    int tutorialStep = 0;
+
 	// Use this for initialization
 	void Start () {
 
@@ -69,6 +73,8 @@ public class Hivemind : MonoBehaviour {
         LoadVotedPosts();
 
         Invoke("LoadPost", 0.25f);
+
+        doTutorial = !PlayerPrefs.HasKey("Tutorial");
 	}
 
     private void MoveAlienLoading()
@@ -154,26 +160,34 @@ public class Hivemind : MonoBehaviour {
 	
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space))
+        if(Application.isEditor) 
         {
-            StartPostLoading();
+            if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space))
+            {
+                StartPostLoading();
+            }
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                video.Play();
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                File.WriteAllText(Application.dataPath + "/dump_posts.json", reddit.postsJSON);
+                File.WriteAllText(Application.dataPath + "/dump_comments.json", reddit.commentsJSON);
+                Debug.Log("Post and comments JSON files dumped.");
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                Application.OpenURL("https://reddit.com" + reddit.CurrentPost.permalink);
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if(Input.anyKeyDown && doTutorial)
         {
-            video.Play();
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            File.WriteAllText(Application.dataPath + "/dump_posts.json", reddit.postsJSON);
-            File.WriteAllText(Application.dataPath + "/dump_comments.json", reddit.commentsJSON);
-            Debug.Log("Post and comments JSON files dumped.");
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            Application.OpenURL("https://reddit.com" + reddit.CurrentPost.permalink);
+            tutorialStep++;
         }
 
         if(adding)
@@ -326,8 +340,52 @@ public class Hivemind : MonoBehaviour {
         commentTextBox.text = ParseHtml(currentComment.body);
 
         Invoke("ShowPostWindow", 0.25f);
-        Invoke("ShowCommentWindow", 0.75f);
-        Invoke("ShowVoteWindow", 1.25f);
+
+        if (doTutorial)
+        {
+            StartCoroutine(DoTutorial());
+        }
+        else
+        {
+            Invoke("ShowCommentWindow", 0.75f);
+            Invoke("ShowVoteWindow", 1.25f);
+        }
+    }
+
+    System.Collections.IEnumerator DoTutorial()
+    {
+        yield return new WaitForSeconds(2f);
+        speechBubble.ShowMessage("This is a (post) fetched straight from (Reddit).");
+        while (tutorialStep <= 0) yield return null;
+        speechBubble.Hide();
+        ShowCommentWindow();
+        yield return new WaitForSeconds(0.5f);
+        MoveAlienTo(alienSpotVoting.position + Vector3.down * 2f);
+        yield return new WaitForSeconds(0.5f);
+        speechBubble.ShowMessage("This is the (comment) you'll be (guessing) on.");
+        while (tutorialStep <= 1) yield return null;
+        speechBubble.ShowMessage("You need to guess (wether) the shown (comment)...");
+        while (tutorialStep <= 2) yield return null;
+        speechBubble.ShowMessage("...has (positive) or (negative) karma.");
+        while (tutorialStep <= 3) yield return null;
+        speechBubble.ShowMessage("You gain (more points) the (more karma) the comment has.");
+        while (tutorialStep <= 4) yield return null;
+        speechBubble.ShowMessage("But if you're (wrong), you (lose) the same amount.");
+        while (tutorialStep <= 5) yield return null;
+        speechBubble.ShowMessage("How well do you know your (Redditors)?");
+        while (tutorialStep <= 6) yield return null;
+        speechBubble.Hide();
+        MoveAlienTo(alienSpotVoting.position);
+        ShowVoteWindow();
+        yield return new WaitForSeconds(1f);
+        speechBubble.ShowMessage("And these are your (options)...");
+        while (tutorialStep <= 7) yield return null;
+        speechBubble.ShowMessage("Lets give it a (go)!");
+        while (tutorialStep <= 8) yield return null;
+        speechBubble.Hide();
+
+        doTutorial = false;
+        PlayerPrefs.SetString("Tutorial", "Done");
     }
 
     private void PickComment()
