@@ -85,6 +85,13 @@ public class Hivemind : MonoBehaviour {
         Tweener.Instance.MoveTo(alien, alienSpotVoting.position, 1f, 0f, TweenEasings.QuarticEaseOut);
     }
 
+    private void MoveAlienTo(Vector3 pos)
+    {
+        AudioManager.Instance.PlayEffectAt(9, alien.position, 1f);
+        AudioManager.Instance.PlayEffectAt(10, alien.position, 1f);
+        Tweener.Instance.MoveTo(alien, pos, 1f, 0f, TweenEasings.QuarticEaseOut);
+    }
+
     void ShowPostWindow()
     {
         Tweener.Instance.MoveLocalTo(postWindow, GetWindowPosition(postWindow, postOnX), 1f, 0f, TweenEasings.BounceEaseOut);
@@ -118,16 +125,19 @@ public class Hivemind : MonoBehaviour {
     void HidePostWindow()
     {
         Tweener.Instance.MoveLocalTo(postWindow, GetWindowPosition(postWindow, postOffX), 0.5f, 0f, TweenEasings.QuarticEaseOut);
+        AudioManager.Instance.PlayEffectAt(11, new Vector3(-7f, 2f, 0f), 0.3f);
     }
 
     void HideCommentWindow()
     {
         Tweener.Instance.MoveLocalTo(commentWindow, GetWindowPosition(commentWindow, commentOffX), 0.5f, 0f, TweenEasings.QuarticEaseOut);
+        AudioManager.Instance.PlayEffectAt(11, new Vector3(7f, -3.5f, 0f), 0.2f);
     }
 
     void HideVoteWindow()
     {
         Tweener.Instance.MoveLocalTo(voteWindow, GetWindowPosition(voteWindow, voteOffX), 0.5f, 0f, TweenEasings.QuarticEaseOut);
+        AudioManager.Instance.PlayEffectAt(11, new Vector3(7f, 0, 0f), 0.1f);
     }
 
     void HideWindows()
@@ -175,8 +185,15 @@ public class Hivemind : MonoBehaviour {
         if(!quitting && Input.GetKeyUp(KeyCode.Escape))
         {
             quitting = true;
-            SceneManager.LoadSceneAsync("Start");
+            HideWindows();
+            MoveAlienTo(alienSpotVoting.position + Vector3.right * 10f);
+            Invoke("GoToStart", 1f);
         }
+    }
+
+    void GoToStart()
+    {
+        SceneManager.LoadSceneAsync("Start");
     }
 
     void StartPostLoading()

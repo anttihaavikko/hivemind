@@ -9,11 +9,15 @@ public class StartView : MonoBehaviour {
     public Text positions, scores;
     int page = 0;
 
+    public MoverWindow leaderboardsWindow, buttonsWindow;
+
 	// Use this for initialization
 	void Start () {
         positions.text = "";
         scores.text = "";
         ScoreManager.Instance.LoadLeaderBoards(0);
+        leaderboardsWindow.Show();
+        buttonsWindow.Show();
 	}
 	
 	// Update is called once per frame
@@ -30,6 +34,18 @@ public class StartView : MonoBehaviour {
 
     public void StartGame()
     {
+        HideWindows();
+        Invoke("DelayedStartGame", 0.7f);
+    }
+
+    private void HideWindows()
+    {
+        leaderboardsWindow.Hide();
+        buttonsWindow.Hide();
+    }
+
+    public void DelayedStartGame()
+    {
         if (PlayerPrefs.HasKey("PlayerName"))
         {
             SceneManager.LoadSceneAsync("Main");
@@ -41,6 +57,12 @@ public class StartView : MonoBehaviour {
     }
 
     public void QuitGame()
+    {
+        HideWindows();
+        Invoke("DelayedQuitGame", 0.7f);
+    }
+
+    public void DelayedQuitGame()
     {
         Debug.Log("Quit...");
         Application.Quit();
