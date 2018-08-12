@@ -8481,8 +8481,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5a7734884cdab426f93c00407b1c88b8, type: 3}
   - {fileID: 8300000, guid: 897b0d36f313e4a63b3599d494ac9571, type: 3}
   - {fileID: 8300000, guid: 337db781c8e6e43e4b418dae24ab1f9f, type: 3}
-  - {fileID: 8300000, guid: 199f83b996b1d494f8e320794883972c, type: 3}
+  - {fileID: 8300000, guid: 285291179182548f69866fb6d7eb49fe, type: 3}
   - {fileID: 8300000, guid: 03246c297a75846b68b623d9375643d4, type: 3}
+  - {fileID: 8300000, guid: 109082470c4644366ae76ac8454c44ef, type: 3}
+  - {fileID: 8300000, guid: d8d10d85f1b684c708cb99b073b7c816, type: 3}
+  - {fileID: 8300000, guid: d3dd8ba707066432d9e1c0e143446ddc, type: 3}
+  - {fileID: 8300000, guid: e860c7a0c0e0040cf8a7163ed46dee93, type: 3}
+  - {fileID: 8300000, guid: 136937b562c2e42fea8ef76c9113ec0e, type: 3}
   lowpass: {fileID: 784549345}
   highpass: {fileID: 784549344}
   targetPitch: 1
@@ -8621,7 +8626,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 784549342}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.4537911, y: -2.5987215, z: -0.07860276}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

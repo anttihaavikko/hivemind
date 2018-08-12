@@ -88,17 +88,31 @@ public class Hivemind : MonoBehaviour {
     void ShowPostWindow()
     {
         Tweener.Instance.MoveLocalTo(postWindow, GetWindowPosition(postWindow, postOnX), 1f, 0f, TweenEasings.BounceEaseOut);
+        AudioManager.Instance.PlayEffectAt(11, new Vector3(-7f, 2f, 0f), 0.3f);
+        StartCoroutine(DoWindowBounceSound(12, 0.3f, new Vector3(-7f, 2f, 0f), 0.7f));
     }
 
     void ShowCommentWindow()
     {
         Tweener.Instance.MoveLocalTo(commentWindow, GetWindowPosition(commentWindow, commentOnX), 1f, 0f, TweenEasings.BounceEaseOut);
+        AudioManager.Instance.PlayEffectAt(11, new Vector3(7f, -3.5f, 0f), 0.2f);
+        StartCoroutine(DoWindowBounceSound(12, 0.3f, new Vector3(7f, -3.5f), 0.6f));
     }
 
     void ShowVoteWindow()
     {
         canVote = true;
         Tweener.Instance.MoveLocalTo(voteWindow, GetWindowPosition(voteWindow, voteOnX), 1f, 0f, TweenEasings.BounceEaseOut);
+        AudioManager.Instance.PlayEffectAt(11, new Vector3(7f, 0, 0f), 0.1f);
+        StartCoroutine(DoWindowBounceSound(12, 0.3f, new Vector3(7f, 0, 0f), 0.5f));
+    }
+
+    System.Collections.IEnumerator DoWindowBounceSound(int soundIndex, float delayTime, Vector3 pos, float volume)
+    {
+        yield return new WaitForSeconds(delayTime);
+        AudioManager.Instance.PlayEffectAt(soundIndex, pos, volume);
+        yield return new WaitForSeconds(0.15f);
+        AudioManager.Instance.PlayEffectAt(soundIndex, pos, volume - 0.1f);
     }
 
     void HidePostWindow()
@@ -358,7 +372,7 @@ public class Hivemind : MonoBehaviour {
             AudioManager.Instance.PlayEffectAt(1, Vector3.zero, 1f);
             AudioManager.Instance.PlayEffectAt(2, Vector3.zero, 1f);
 
-            cam.BaseEffect(1.5f);
+            cam.BaseEffect(2f);
 
             AudioManager.Instance.Lowpass(true);
             AudioManager.Instance.targetPitch = 0.6f;
