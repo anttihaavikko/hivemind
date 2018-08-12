@@ -9,7 +9,7 @@ public class StartView : MonoBehaviour {
     public Text positions, scores;
     int page = 0;
 
-    public MoverWindow leaderboardsWindow, buttonsWindow;
+    public MoverWindow leaderboardsWindow, buttonsWindow, startWindow;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +18,7 @@ public class StartView : MonoBehaviour {
         ScoreManager.Instance.LoadLeaderBoards(0);
         leaderboardsWindow.Show();
         buttonsWindow.Show();
+        startWindow.Show();
 	}
 	
 	// Update is called once per frame
@@ -42,6 +43,7 @@ public class StartView : MonoBehaviour {
     {
         leaderboardsWindow.Hide();
         buttonsWindow.Hide();
+        startWindow.Hide();
     }
 
     public void DelayedStartGame()
