@@ -551,6 +551,8 @@ public class Hivemind : MonoBehaviour {
 
         addition.transform.localPosition = addSpot;
 
+        EffectManager.Instance.AddEffect(0, addition.transform.position);
+
         ScoreManager.Instance.SubmitScore(PlayerPrefs.GetString("PlayerName"), totalScore);
 
         Tweener.Instance.ScaleTo(addition.transform, Vector3.one, 0.33f, 0f, TweenEasings.BounceEaseOut);
@@ -561,9 +563,9 @@ public class Hivemind : MonoBehaviour {
         Invoke("HidePostWindow", 2.5f);
 
         if(success) {
-            AddCombo();
+            Invoke("AddCombo", 0.5f);
         } else {
-            ClearCombo();
+            Invoke("ClearCombo", 0.5f);
 
             //Application.OpenURL("https://reddit.com" + reddit.CurrentPost.permalink);
             //Debug.Log(currentComment.score + " by " + currentComment.author + " : " + currentComment.body);
@@ -640,6 +642,8 @@ public class Hivemind : MonoBehaviour {
         if (totalScore - shownScore > 10) Invoke("DoAdditionSound", 0.15f);
         if (totalScore - shownScore > 50) Invoke("DoAdditionSound", 0.3f);
         adding = true;
+
+        EffectManager.Instance.AddEffect(0, scoreText.transform.position + Vector3.down * 0.5f + Vector3.left * 0.5f);
     }
 
     void DoAdditionSound()

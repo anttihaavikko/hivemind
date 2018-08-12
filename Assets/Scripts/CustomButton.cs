@@ -55,6 +55,9 @@ public class CustomButton : MonoBehaviour {
 
         ChangeVisibility(false);
 
+        EffectManager.Instance.AddEffect(1, transform.position);
+        EffectManager.Instance.AddEffect(2, transform.position);
+
         //AudioManager.Instance.PlayEffectAt(1, transform.position, 0.5f);
         //EffectManager.Instance.AddEffect(1, transform.position + Vector3.up * transform.lossyScale.y * 0.75f);
 

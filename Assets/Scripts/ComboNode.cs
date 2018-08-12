@@ -31,6 +31,8 @@ public class ComboNode : MonoBehaviour {
         {
             Tweener.Instance.ScaleTo(filling, fullSize, 0.3f, delay, TweenEasings.BounceEaseOut);
 
+            EffectManager.Instance.AddEffect(0, filling.position);
+
             if(hasBonus)
                 Tweener.Instance.ScaleTo(button.transform, buttonSize, 0.3f, delay + 0.2f, TweenEasings.BounceEaseOut);
 
