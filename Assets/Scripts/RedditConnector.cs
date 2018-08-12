@@ -64,16 +64,13 @@ public class RedditConnector {
         if (!www.isNetworkError)
         {
             string resultContent = www.downloadHandler.text;
-            OAuthToken json = JsonUtility.FromJson<OAuthToken>(resultContent);
 
-            //Debug.Log(resultContent);
+            OAuthToken json = JsonUtility.FromJson<OAuthToken>(resultContent);
 
             token = json.access_token;
 
-            if(json.message != null)
+            if (json.message != null)
                 errorMessage = "Authentication error: " + json.message;
-
-            //Debug.Log("Got new token.");
         }
         else
         {
@@ -124,6 +121,18 @@ public class RedditConnector {
             postsJSON = resultContent;
 
             //Debug.Log(resultContent);
+
+            try
+            {
+                PostWrapper jsonValidation = JsonUtility.FromJson<PostWrapper>(resultContent);
+            }
+            catch (Exception e)
+            {
+                errorMessage = e.Message;
+                showPost();
+                yield break;
+            }
+
             PostWrapper json = JsonUtility.FromJson<PostWrapper>(resultContent);
 
             if (json.message != null) {
@@ -184,7 +193,7 @@ public class RedditConnector {
 
         CurrentPostComments.Clear();
 
-        UnityWebRequest www = UnityWebRequest.Get("https://oauth.reddit.com" + CurrentPost.permalink + "/.json?sort=controversial");
+        UnityWebRequest www = UnityWebRequest.Get("http://oauth.reddit.com" + CurrentPost.permalink + "/.json?sort=controversial");
         www.SetRequestHeader("Authorization", "Bearer " + token);
 
         if(customUserAgent && Application.platform != RuntimePlatform.WebGLPlayer)
@@ -199,6 +208,16 @@ public class RedditConnector {
 
             if(!www.isHttpError)
                 resultContent = "{\"comments\":" + www.downloadHandler.text + "}";
+
+            try
+            {
+                CommentsWrapper jsonValidation = JsonUtility.FromJson<CommentsWrapper>(resultContent);
+            }
+            catch (Exception e)
+            {
+                errorMessage = e.Message;
+                yield break;
+            }
 
             //Debug.Log(resultContent);
             CommentsWrapper json = JsonUtility.FromJson<CommentsWrapper>(resultContent);

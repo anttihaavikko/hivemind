@@ -33,6 +33,8 @@ public class ComboNode : MonoBehaviour {
 
             if(hasBonus)
                 Tweener.Instance.ScaleTo(button.transform, buttonSize, 0.3f, delay + 0.2f, TweenEasings.BounceEaseOut);
+
+            AudioManager.Instance.PlayEffectAt(13, transform.position, 1f);
         }
         else
         {
@@ -40,6 +42,8 @@ public class ComboNode : MonoBehaviour {
 
             if(hasBonus)
                 Tweener.Instance.ScaleTo(button.transform, Vector3.zero, 0.3f, delay + 0.2f, TweenEasings.QuadraticEaseOut);
+
+            AudioManager.Instance.PlayEffectAt(8, transform.position, 0.5f);
         }
     }
 }

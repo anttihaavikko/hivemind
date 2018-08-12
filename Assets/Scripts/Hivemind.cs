@@ -285,19 +285,6 @@ public class Hivemind : MonoBehaviour {
 
     void ShowPost()
     {
-        if(reddit.CurrentPost.num_comments < 3)
-        {
-            LoadPost("Digging deep...");
-            return;
-        }
-
-        if(votedPosts.Contains(reddit.CurrentPost.id))
-        {
-            return;
-        }
-
-        speechBubble.Hide();
-
         HideInfo();
 
         if (reddit.errorMessage != null)
@@ -306,6 +293,19 @@ public class Hivemind : MonoBehaviour {
             Tweener.Instance.ScaleTo(retryButton, Vector3.one, 0.3f, 0, TweenEasings.BounceEaseOut);
             return;
         }
+
+        if (reddit.CurrentPost.num_comments < 3)
+        {
+            LoadPost("Digging deep...");
+            return;
+        }
+
+        if (votedPosts.Contains(reddit.CurrentPost.id))
+        {
+            return;
+        }
+
+        speechBubble.Hide();
 
         multiplier = 1;
 
