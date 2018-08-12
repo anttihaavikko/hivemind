@@ -62,7 +62,7 @@ public class EntryView : MonoBehaviour {
                 if (playerName.Length != 0)
                 {
                     playerName = playerName.Substring(0, playerName.Length - 1);
-                    //AudioManager.Instance.PlayEffectAt(AudioManager.WRONG, Vector3.zero, 1f);
+                    AudioManager.Instance.PlayEffectAt(14, Vector3.zero, 0.75f);
                 }
 
             }
@@ -78,7 +78,12 @@ public class EntryView : MonoBehaviour {
                 {
 
                     if (playerName != "")
+                    {
+                        AudioManager.Instance.PlayEffectAt(0, Vector3.zero, 0.75f);
                         AnimateAndStart();
+                    } else {
+                        AudioManager.Instance.PlayEffectAt(1, Vector3.zero, 0.5f);
+                    }
 
                 }
                 else
@@ -86,7 +91,7 @@ public class EntryView : MonoBehaviour {
                     if (playerName.Length < 9)
                     {
                         playerName += c.ToString().ToUpper();
-                        //AudioManager.Instance.PlayEffectAt(AudioManager.CHARGE, Vector3.zero, 1f);
+                        AudioManager.Instance.PlayEffectAt(15, Vector3.zero, 0.5f);
                     }
                 }
 
@@ -106,6 +111,8 @@ public class EntryView : MonoBehaviour {
     {
         if (playerName != "")
             AnimateAndStart();
+        else
+            AudioManager.Instance.PlayEffectAt(1, Vector3.zero, 0.5f);
     }
 
     void AnimateAndStart()

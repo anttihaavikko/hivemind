@@ -170,6 +170,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 136937b562c2e42fea8ef76c9113ec0e, type: 3}
   - {fileID: 8300000, guid: 199f83b996b1d494f8e320794883972c, type: 3}
   - {fileID: 8300000, guid: 8df8fd4810f4044a39c0f729ab5012fb, type: 3}
+  - {fileID: 8300000, guid: 27baea346b98443bf86013578ee80161, type: 3}
   lowpass: {fileID: 169661759105622276}
   highpass: {fileID: 165599381865674924}
   targetPitch: 1
