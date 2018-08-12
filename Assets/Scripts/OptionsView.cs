@@ -69,6 +69,7 @@ public class OptionsView : MonoBehaviour {
         PlayerPrefs.DeleteKey("CheckNumber");
         PlayerPrefs.DeleteKey("Tutorial");
         PlayerPrefs.DeleteKey("ComboTutorial");
+        PlayerPrefs.DeleteKey("VotedPosts");
     }
 
     public void BackToStart()
