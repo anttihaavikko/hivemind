@@ -74,4 +74,15 @@ public class StartView : MonoBehaviour {
         Debug.Log("Quit...");
         Application.Quit();
     }
+
+    public void GoOptions()
+    {
+        HideWindows();
+        Invoke("DelayedGoOptions", 0.7f);
+    }
+
+    void DelayedGoOptions()
+    {
+        SceneManager.LoadSceneAsync("Options");
+    }
 }

@@ -49,6 +49,12 @@ public class AudioManager : MonoBehaviour {
 		// toReverb = AudioReverbPreset.Off;
 
 		DontDestroyOnLoad(instance.gameObject);
+
+        if (PlayerPrefs.HasKey("MusicVolume"))
+            ChangeMusicVolume(PlayerPrefs.GetFloat("MusicVolume"));
+
+        if (PlayerPrefs.HasKey("SoundVolume"))
+            volume = PlayerPrefs.GetFloat("SoundVolume");
 	}
 
 	public void BackToDefaultMusic() {
@@ -147,7 +153,8 @@ public class AudioManager : MonoBehaviour {
 	}
 
 	public void ChangeMusicVolume(float vol) {
-		curMusic.volume = vol * 1.5f;
-		musVolume = vol * 1.5f;
+        PlayerPrefs.SetFloat("MusicVolume", vol);
+		curMusic.volume = vol * 2f;
+		musVolume = vol * 2f;
 	}
 }

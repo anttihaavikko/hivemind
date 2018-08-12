@@ -9,19 +9,20 @@ public class OptionsView : MonoBehaviour {
 	private bool starting = false;
 
 	public Slider musicSlider, soundSlider;
-	public RectTransform options;
 
 	private bool optionsOpen = false;
 	private bool canQuit = false;
     private float prevSoundStep;
 
+    public MoverWindow optionsWindow;
+
 	void Start() {
 		soundSlider.value = AudioManager.Instance.volume;
-		musicSlider.value = AudioManager.Instance.curMusic.volume;
-        GetComponent<Canvas> ().worldCamera = Camera.main;
-        GetComponent<Canvas> ().planeDistance = 1;
+		musicSlider.value = AudioManager.Instance.curMusic.volume * 0.5f;
 
         prevSoundStep = AudioManager.Instance.volume;
+
+        optionsWindow.Show();
 	}
 
 	void EnableQuit() {
@@ -38,52 +39,46 @@ public class OptionsView : MonoBehaviour {
 		if (!canQuit) {
 			return;
 		}
-
-		if (Input.GetKeyDown (KeyCode.Escape)) {
-
-			if (optionsOpen) {
-				ToggleOptions (false);
-			}
-				
-			return;
-		}
-
-		if (Input.GetKeyDown (KeyCode.O) || Input.GetKeyDown (KeyCode.P)) {
-			ToggleOptions ();
-			return;
-		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		DoInputs ();
-
-		float optionsX = optionsOpen ? 0f : 90f;
-		options.anchoredPosition = Vector2.Lerp(options.anchoredPosition, new Vector2(optionsX, 0f), Time.deltaTime * 10f);
 	}
 
 	public void ChangeMusicVolume() {
 		AudioManager.Instance.curMusic.volume = musicSlider.value;
         AudioManager.Instance.ChangeMusicVolume(musicSlider.value);
-//		AudioManager.Instance.SaveVolumes ();
 	}
 
 	public void ChangeSoundVolume() {
 		if (Mathf.Abs(soundSlider.value - prevSoundStep) > 0.075f) {
-			AudioManager.Instance.PlayEffectAt (2, Camera.main.transform.position, 1.5f);
+            AudioManager.Instance.PlayEffectAt (13, Vector3.zero, 1f);
             prevSoundStep = soundSlider.value;
 		}
 
         AudioManager.Instance.volume = soundSlider.value;
+        PlayerPrefs.SetFloat("SoundVolume", soundSlider.value);
 	}
 
-	public void ToggleOptions() {
-		ToggleOptions (!optionsOpen);
-	}
+    public void EraseSave()
+    {
+        PlayerPrefs.DeleteKey("PlayerName");
+        PlayerPrefs.DeleteKey("HiScore");
+        PlayerPrefs.DeleteKey("CheckNumber");
+        PlayerPrefs.DeleteKey("Tutorial");
+        PlayerPrefs.DeleteKey("ComboTutorial");
+    }
 
-	public void ToggleOptions(bool state) {
-		AudioManager.Instance.PlayEffectAt (16, Vector3.zero, 1.5f);
-		optionsOpen = state;
-	}
+    public void BackToStart()
+    {
+        optionsWindow.Hide();
+        Invoke("DoBack", 1f);
+    }
+
+    void DoBack()
+    {
+        SceneManager.LoadSceneAsync("Start");
+    }
 }
