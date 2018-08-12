@@ -431,7 +431,7 @@ public class Hivemind : MonoBehaviour {
         alientAnimation.SetBool("pointDown", true);
         speechBubble.ShowMessage("This is the (comment) you'll be (guessing) on.");
         while (tutorialStep <= 1) yield return null;
-        speechBubble.ShowMessage("You need to guess (wether) the shown (comment)...");
+        speechBubble.ShowMessage("You need to guess (whether) the shown (comment)...");
         while (tutorialStep <= 2) yield return null;
         speechBubble.ShowMessage("...has (positive) or (negative) karma.");
         while (tutorialStep <= 3) yield return null;
