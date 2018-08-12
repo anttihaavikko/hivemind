@@ -89,6 +89,7 @@ public class Hivemind : MonoBehaviour {
         doComboTutorial = !PlayerPrefs.HasKey("ComboTutorial");
 
         //if (Application.isEditor) doTutorial = true;
+        //if (Application.isEditor) doComboTutorial = true;
 	}
 
     private void MoveAlienLoading()
@@ -128,7 +129,9 @@ public class Hivemind : MonoBehaviour {
 
     void ShowVoteWindow()
     {
-        canVote = true;
+        if(!doTutorial)
+            canVote = true;
+        
         Tweener.Instance.MoveLocalTo(voteWindow, GetWindowPosition(voteWindow, voteOnX), 1f, 0f, TweenEasings.BounceEaseOut);
         AudioManager.Instance.PlayEffectAt(11, new Vector3(7f, 0, 0f), 0.1f);
         StartCoroutine(DoWindowBounceSound(12, 0.3f, new Vector3(7f, 0, 0f), 0.5f));
@@ -389,7 +392,7 @@ public class Hivemind : MonoBehaviour {
 
     System.Collections.IEnumerator DoComboTutorial()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.75f);
         speechBubble.Hide();
         yield return new WaitForSeconds(0.75f);
         comboWindow.Show();
@@ -410,6 +413,8 @@ public class Hivemind : MonoBehaviour {
 
     System.Collections.IEnumerator DoTutorial()
     {
+        canVote = false;
+
         yield return new WaitForSeconds(1.75f);
         MoveAlienTo(alienSpotVoting.position + Vector3.down * 1f + Vector3.left * 2f);
         yield return new WaitForSeconds(0.25f);
@@ -447,6 +452,7 @@ public class Hivemind : MonoBehaviour {
         speechBubble.ShowMessage("Lets give it a (go)!");
         while (tutorialStep <= 8) yield return null;
         speechBubble.Hide();
+        canVote = true;
         MoveAlienTo(alienSpotVoting.position);
 
         doTutorial = false;
@@ -475,6 +481,9 @@ public class Hivemind : MonoBehaviour {
 
     void AlienComment()
     {
+        if (doTutorial)
+            return;
+
         var forAlien = reddit.CurrentPostComments.Find(c => c.score > 2 && c.body.Length < 50);
 
         if (forAlien != null)

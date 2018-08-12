@@ -80,7 +80,7 @@ public class SpeechBubble : MonoBehaviour {
 				msg += ")";
 			}
 
-            textArea.text = useColors ? message.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>") : message;
+            textArea.text = useColors ? msg.Replace("(", "<color=" + hiliteColorHex + ">").Replace(")", "</color>") : msg;
 
 			string letter = message.Substring (messagePos - 1, 1);
 
