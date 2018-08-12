@@ -535,7 +535,7 @@ public class Hivemind : MonoBehaviour {
         canVote = false;
         adding = false;
 
-        var success = (score < 0 && currentComment.score < 0 || score > 0);
+        var success = (score < 0 && currentComment.score < 0 || score > 0 && currentComment.score > 0);
         var dir = success ? 1 : -1;
         var amt = Mathf.Abs(currentComment.score);
         var sign = success ? "+" : "-";
