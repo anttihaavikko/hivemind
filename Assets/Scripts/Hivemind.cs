@@ -403,6 +403,7 @@ public class Hivemind : MonoBehaviour {
         while (tutorialStep <= 0) yield return null;
         speechBubble.Hide();
         yield return new WaitForSeconds(0.4f);
+        alientAnimation.SetBool("pointDown", false);
         comboWindow.Hide();
         yield return new WaitForSeconds(0.3f);
         StartPostLoading();
