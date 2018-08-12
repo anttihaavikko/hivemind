@@ -477,7 +477,7 @@ public class Hivemind : MonoBehaviour {
 
         Invoke("AlienComment", Random.Range(5f, 20f));
 
-        Debug.Log(str);
+        //Debug.Log(str);
     }
 
     void AlienComment()
